@@ -23,6 +23,11 @@ const playerSchema = new Schema(
     avatar: String,
 
     location: String,
+
+    userType: {
+      type: String,
+      default: "Player",
+    },
   },
   {
     timestamps: true,

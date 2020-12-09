@@ -23,6 +23,11 @@ const organizerSchema = new Schema(
     avatar: String,
 
     location: String,
+
+    userType: {
+      type: String,
+      default: "Organizer",
+    },
   },
   {
     timestamps: true,

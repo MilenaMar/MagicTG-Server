@@ -37,7 +37,7 @@ router.get("/session", (req, res) => {
 // PLAYER LOGIN & SIGNUP
 
 router.post("/signup/player", shouldNotBeLoggedIn, (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, email } = req.body;
 
   if (!username) {
     return res
@@ -79,6 +79,7 @@ router.post("/signup/player", shouldNotBeLoggedIn, (req, res) => {
         return Player.create({
           username,
           password: hashedPassword,
+          email,
         });
       })
       .then((user) => {
@@ -155,7 +156,7 @@ router.post("/login/player", shouldNotBeLoggedIn, (req, res, next) => {
 const Organizer = require("../models/Organizer.model");
 
 router.post("/signup/organizer", shouldNotBeLoggedIn, (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, email } = req.body;
 
   if (!username) {
     return res
@@ -182,7 +183,7 @@ router.post("/signup/organizer", shouldNotBeLoggedIn, (req, res) => {
   */
 
   // Search the database for a user with the username submitted in the form
-  organizer.findOne({ username }).then((found) => {
+  Organizer.findOne({ username }).then((found) => {
     // If the user is found, send the message username is taken
     if (found) {
       return res.status(400).json({ errorMessage: "Username already taken." });
@@ -194,9 +195,10 @@ router.post("/signup/organizer", shouldNotBeLoggedIn, (req, res) => {
       .then((salt) => bcrypt.hash(password, salt))
       .then((hashedPassword) => {
         // Create a user and save it in the database
-        return organizer.create({
+        return Organizer.create({
           username,
           password: hashedPassword,
+          email,
         });
       })
       .then((user) => {
@@ -240,8 +242,7 @@ router.post("/login/organizer", shouldNotBeLoggedIn, (req, res, next) => {
   }
 
   // Search the database for a user with the username submitted in the form
-  organizer
-    .findOne({ username })
+  Organizer.findOne({ username })
     .then((user) => {
       // If the user isn't found, send the message that user provided wrong credentials
       if (!user) {
