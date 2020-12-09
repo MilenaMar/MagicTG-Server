@@ -36,4 +36,4 @@ const organizerSchema = new Schema(
 
 const Organizer = model("Organizer", organizerSchema);
 
-module.exports = Player;
+module.exports = Organizer;

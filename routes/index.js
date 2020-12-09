@@ -9,7 +9,5 @@ router.get("/", (req, res, next) => {
 });
 
 router.use("/auth", authRoutes);
-router.use("/events", eventsRoutes);
-router.use("/user", userRoutes);
 
 module.exports = router;
