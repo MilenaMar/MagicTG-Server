@@ -113,8 +113,10 @@ Event model
 ### API Endpoints/Backend Routes
 
 - / - Homepage - (GET)
-- /auth/signup - (POST) - Signup form User can be a Player or Organizer
-- /auth/login - (POST) - Login form
+- /auth/signup/player - (POST) - Signup form User can be a Player or Organizer
+- /auth/login/player - (POST) - Login form
+- /auth/signup/organizer - (POST) - Signup form User can be a Player or Organizer
+- /auth/login/organizer - (POST) - Login form
 - /user/:username - (GET) - User profile can be Organizer or Player
 - /user/:username/edit-profile - (PUT) - User can edit his own profile
 - /user/:username/delete - (POST) - User can delete his own account
