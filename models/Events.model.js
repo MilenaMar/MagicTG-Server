@@ -1,7 +1,7 @@
 const { Schema, model } = require("mongoose");
 
 // TODO: Please make sure you edit the user model to whatever makes sense in this case
-const organizerSchema = new Schema(
+const eventSchema = new Schema(
   {
     location: {
       type: String,
@@ -33,6 +33,6 @@ const organizerSchema = new Schema(
   }
 );
 
-const Organizer = model("Organizer", organizerSchema);
+const Event = model("Event", eventSchema);
 
-module.exports = Player;
+module.exports = Event;
