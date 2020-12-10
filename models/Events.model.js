@@ -22,6 +22,8 @@ const organizerSchema = new Schema(
 
     maxPlayers: Number,
 
+    format: { type: String, enum: ["Legacy", "Modern", "Pioner", "Standar"] },
+
     organizer: [{ type: Schema.Types.ObjectId, ref: "Organizer" }],
 
     players: [{ type: Schema.Types.ObjectId, ref: "Player" }],
