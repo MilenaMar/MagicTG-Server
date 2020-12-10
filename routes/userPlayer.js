@@ -15,7 +15,7 @@ const Events = require("../models/Events.model");
 ////// Player Profile//////////////////////
 router.get("/:id", (req, res) => {
   console.log(req.params.id);
-  Player.findOne({username: req.params.id})
+  Player.findOne({ username: req.params.id })
     .then((user) => {
       console.log(user);
       return res.json({ user });
@@ -26,22 +26,20 @@ router.get("/:id", (req, res) => {
     });
 });
 
-///////// User Settings - Update  details, Profile Picture and Password////////////
-//router.get('/settings',isLoggedIn,(req,res)=> {
-//  const style = "/stylesheets/settings.css"
-//res.render('user/settings',{ currentUser: req.session.user,style })})
-//   //------------- update general settings -------------//
 //
-//router.post('/general-settings', (req, res) => {
-//  const { username, email, about,location } = req.body;
-//  const style = "/stylesheets/settings.css"
-//  User.findByIdAndUpdate(req.session.user._id, { username, email, about,location }, { new: true })
-//    .then((currentUser) => {
-//      req.session.user = currentUser;
-//      res.redirect( '/user/profile')})
-//    .catch(() =>res.render('user/settings',{errorMessage:"there was and error updating your profile",style}));
-//});
-//
+
+router.put("/:id/edit-profile", (req, res) => {
+  Player.findOneAndUpdate(req.params.id, req.body, { new: true })
+    .then((userUpdated) => {
+      res.json({ message: "all good", userUpdated });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ errorMessage: err.message });
+    });
+});
+
+
 ////-----------------UpdatePassword-------------------------------///
 //
 //router.post("/updatePassword", (req, res) => {

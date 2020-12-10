@@ -19,8 +19,12 @@ const playerSchema = new Schema(
       type: String,
       required: true,
     },
-
-    avatar: String,
+     
+    avatar: {
+      type: String,
+      default: "https://res.cloudinary.com/dwttlckdr/image/upload/v1607625756/kisspng-magic-the-gathering-playing-card-magic-points-car-gathering-5ad98d821a5537.8380805815242069781079_lri7cg.png",
+    },
+   
 
     location: String,
 
