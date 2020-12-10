@@ -36,17 +36,17 @@ router.get("/session", (req, res) => {
         }
         return res.status(200).json(session);
       });
-  } else if (req.headers.usertype === 'Player'){
+  } else if (req.headers.usertype === "Player") {
     Session.findById(accessToken)
-    .populate("player")
-    .then((session) => {
-      if (!session) {
-        return res
-          .status(404)
-          .json({ errorMessage: "Session does not exist" });
-      }
-      return res.status(200).json(session);
-    });
+      .populate("player")
+      .then((session) => {
+        if (!session) {
+          return res
+            .status(404)
+            .json({ errorMessage: "Session does not exist" });
+        }
+        return res.status(200).json(session);
+      });
   }
 });
 
