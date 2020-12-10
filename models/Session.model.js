@@ -2,8 +2,8 @@ const { Schema, model } = require("mongoose");
 const ObjectId = Schema.Types.ObjectId;
 
 const sessionSchema = new Schema({
-  player: { type: ObjectId, ref: "Player" },
-  organizer: { type: ObjectId, ref: "Organizer" },
+  player: { type: Schema.Types.ObjectId, ref: "Player" },
+  organizer: { type: Schema.Types.ObjectId, ref: "Organizer" },
   createdAt: {
     type: Date,
     default: Date.now(),
