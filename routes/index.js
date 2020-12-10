@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const authRoutes = require("./auth");
 const playerRoutes = require("./userPlayer");
-//const organizerRoutes = require("./userOrganizer");
+const organizerRoutes = require("./userOrganizer");
 //const eventsRoutes = require("./events");
 
 /* GET home page */
@@ -12,6 +12,6 @@ router.get("/", (req, res, next) => {
 
 router.use("/auth", authRoutes);
 router.use("/user/player", playerRoutes);
-//router.use("/organizer", organizerRoutes);
+router.use("/user/organizer", organizerRoutes);
 
 module.exports = router;

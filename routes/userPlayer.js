@@ -15,7 +15,7 @@ const Events = require("../models/Events.model");
 ////// Player Profile//////////////////////
 router.get("/:id", (req, res) => {
   console.log(req.params.id);
-  Player.findById(req.params.id)
+  Player.findOne({username: req.params.id})
     .then((user) => {
       console.log(user);
       return res.json({ user });
