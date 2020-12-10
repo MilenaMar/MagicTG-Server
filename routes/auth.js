@@ -24,7 +24,6 @@ router.get("/session", (req, res) => {
 
   // accessToken is being sent on every request in the headers
   const accessToken = req.headers.authorization;
-  console.log(req.headers);
 
   if (req.headers.usertype === "Organizer") {
     Session.findById(accessToken)

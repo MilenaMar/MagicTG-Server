@@ -11,7 +11,7 @@ router.get("/", (req, res, next) => {
 
 
 router.use("/auth", authRoutes);
-router.use("/player", playerRoutes);
+router.use("/user/player", playerRoutes);
 //router.use("/organizer", organizerRoutes);
 
 module.exports = router;

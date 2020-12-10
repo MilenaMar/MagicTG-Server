@@ -9,26 +9,25 @@ const saltRounds = 10;
 const shouldNotBeLoggedIn = require("../middlewares/shouldNotBeLoggedIn");
 const isLoggedIn = require("../middlewares/isLoggedIn");
 
-
 const Player = require("../models/Player.model");
 const Events = require("../models/Events.model");
 
-
-
-
-////// User Profile//////////////////////
-router.get('/player/${username}',isLoggedIn,(req,res)=>{
-  Player.find(req.params.user.username)
-  .then((user) => {
-  return res.json({ user, accessToken: session._id });
-  });
-}); 
-
-
-
+////// Player Profile//////////////////////
+router.get("/:id", (req, res) => {
+  console.log(req.params.id);
+  Player.findById(req.params.id)
+    .then((user) => {
+      console.log(user);
+      return res.json({ user });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ errorMessage: err.message });
+    });
+});
 
 ///////// User Settings - Update  details, Profile Picture and Password////////////
-//router.get('/settings',isLoggedIn,(req,res)=> { 
+//router.get('/settings',isLoggedIn,(req,res)=> {
 //  const style = "/stylesheets/settings.css"
 //res.render('user/settings',{ currentUser: req.session.user,style })})
 //   //------------- update general settings -------------//
@@ -85,7 +84,7 @@ router.get('/player/${username}',isLoggedIn,(req,res)=>{
 //} )
 //
 ////-------------------- Delete Account -----------------------------------------//
-//router.get('/delete-account',isLoggedIn,(req,res)=> { 
+//router.get('/delete-account',isLoggedIn,(req,res)=> {
 //  const style = "/stylesheets/settings.css"
 //  res.render('user/delete-account',{ currentUser: req.session.user, style})})
 //
@@ -99,7 +98,7 @@ router.get('/player/${username}',isLoggedIn,(req,res)=>{
 //  return;
 //  }
 //  User.findByIdAndDelete(req.session.user._id)
-//  
+//
 //    .then(() => {
 //      req.session.destroy(err => {
 //        if (err) {
@@ -115,7 +114,7 @@ router.get('/player/${username}',isLoggedIn,(req,res)=>{
 //
 //
 /////// Routes for the Post Model/////////////////////////////////////
-//router.get('/newpost',isLoggedIn,(req,res)=> { 
+//router.get('/newpost',isLoggedIn,(req,res)=> {
 //  const style = "/stylesheets/posts.css"
 //  const scrypt = "/javascripts/script.js"
 //res.render('user/new-post',{ currentUser: req.session.user,style,scrypt })})
@@ -159,7 +158,7 @@ router.get('/player/${username}',isLoggedIn,(req,res)=>{
 //
 //router.get('/readmore/:slug',isLoggedIn, (req,res)=>{
 //  const style = "/stylesheets/readP.css"
-//  Post.findOne({slug:req.params.slug}) 
+//  Post.findOne({slug:req.params.slug})
 //  .populate('author')
 //  .then((post) => {
 //    const treatedDate = post.when.toString().slice(4,16);
