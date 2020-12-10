@@ -12,10 +12,10 @@ const isLoggedIn = require("../middlewares/isLoggedIn");
 const Organizer = require("../models/Organizer.model");
 const Events = require("../models/Events.model");
 
-////// Player Profile//////////////////////
+////// Organizer Profile//////////////////////
 router.get("/:id", (req, res) => {
   console.log(req.params.id);
-  Organizer.findOne({username: req.params.id})
+  Organizer.findOne({ username: req.params.id })
     .then((user) => {
       console.log(user);
       return res.json({ user });
@@ -25,6 +25,5 @@ router.get("/:id", (req, res) => {
       res.status(500).json({ errorMessage: err.message });
     });
 });
-
 
 module.exports = router;
