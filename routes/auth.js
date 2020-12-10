@@ -37,6 +37,17 @@ router.get("/session", (req, res) => {
         }
         return res.status(200).json(session);
       });
+  } else if (req.headers.usertype === 'Player'){
+    Session.findById(accessToken)
+    .populate("player")
+    .then((session) => {
+      if (!session) {
+        return res
+          .status(404)
+          .json({ errorMessage: "Session does not exist" });
+      }
+      return res.status(200).json(session);
+    });
   }
 });
 
@@ -90,7 +101,7 @@ router.post("/signup/player", shouldNotBeLoggedIn, (req, res) => {
       })
       .then((user) => {
         Session.create({
-          user: user._id,
+          player: user._id,
           createdAt: Date.now(),
         }).then((session) => {
           res.status(201).json({ user, accessToken: session._id });
@@ -141,7 +152,7 @@ router.post("/login/player", shouldNotBeLoggedIn, (req, res, next) => {
         if (!isSamePassword) {
           return res.status(400).json({ errorMessage: "Wrong credentials." });
         }
-        Session.create({ user: user._id, createdAt: Date.now() }).then(
+        Session.create({ player: user._id, createdAt: Date.now() }).then(
           (session) => {
             return res.json({ user, accessToken: session._id });
           }
