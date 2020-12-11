@@ -1,9 +1,5 @@
 const router = require("express").Router();
-const bcrypt = require("bcryptjs");
-const mongoose = require("mongoose");
-
-// How many rounds should bcrypt run the salt (default [10 - 12 rounds])
-const saltRounds = 10;
+const bcrypt = require("bcryptjs"); 
 
 // Require necessary middlewares in order to control access to specific routes
 const shouldNotBeLoggedIn = require("../middlewares/shouldNotBeLoggedIn");
@@ -41,33 +37,19 @@ router.put("/:id/edit-profile",isLoggedIn, (req, res) => {
 
 ////-----------------UpdatePassword-------------------------------///
 //
-//router.post("/updatePassword", (req, res) => {
-//  const { oldPassword, newPassword, repeatPassword } = req.body;
-//  const style = "/stylesheets/settings.css"
-//  if (newPassword !== repeatPassword) {
-//    res.render('user/settings',{errorMessage:'Your new passowrd and confirmation do not match please try again',style})
-//  }
-//  const isSamePassword = bcrypt.compareSync(
-//    oldPassword,
-//    req.session.user.password
-//  );
-//  if (!isSamePassword) {
-//  res.render('user/settings',{errorMessageP:'Please try again  your old password',style})
-//  }
-//  const hash = bcrypt.genSaltSync(10);
-//  const hashedPassword = bcrypt.hashSync(newPassword, hash);
-//  User.findByIdAndUpdate(
-//    req.session.user._id,
-//    { password: hashedPassword },
-//    { new: true }
-//  ).then((currentUser) => {
-//    req.session.user = currentUser;
-//    res.render("user/settings", {
-//      updateMessageP: "Your Password has being updated",style
-//    });
-//  });
-//});
-//
+router.post("/:id/update-password", (req, res) => {
+  const {newPassword} = req.body;
+  const hash = bcrypt.genSaltSync(10);
+  const hashedPassword = bcrypt.hashSync(newPassword, hash);
+  Player.findOneAndUpdate(
+    req.params.id,
+    { password: hashedPassword },
+    { new: true }
+  ).then((updatedUser) => {
+    res.json({ message: "all good", updatedUser });
+    });
+  });
+
 //
 //// ----------------------- Update Profile Picture --------------------//
 //
