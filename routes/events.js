@@ -58,4 +58,17 @@ router.post("/new", (req, res) => {
     });
 });
 
+router.put("/edit/:_id", isLoggedIn, (req, res) => {
+  Event.findOneAndUpdate({ _id: req.params._id }, req.body, {
+    new: true,
+  })
+    .then((eventUpdated) => {
+      res.json({ message: "all good", eventUpdated });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ errorMessage: err.message });
+    });
+});
+
 module.exports = router;
