@@ -17,7 +17,6 @@ router.get("/:id", (req, res) => {
   console.log(req.params.id);
   Organizer.findOne({ username: req.params.id })
     .then((user) => {
-      console.log(user);
       return res.json({ user });
     })
     .catch((err) => {

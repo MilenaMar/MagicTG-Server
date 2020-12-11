@@ -7,7 +7,8 @@ module.exports = (req, res, next) => {
   }
 
   Session.findById(req.headers.authorization)
-    .populate("user")
+    .populate("player")
+    .populate("organizer")
     .then((session) => {
       if (!session) {
         return res

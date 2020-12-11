@@ -17,6 +17,17 @@ const shouldNotBeLoggedIn = require("../middlewares/shouldNotBeLoggedIn");
 const isLoggedIn = require("../middlewares/isLoggedIn");
 
 // router.get("/session", (req, res) => {}
+router.get("/", (req, res, next) => {
+  Event.find()
+    .populate("organizer")
+    .populate("players")
+    .then((events) => {
+      res.json(events);
+    })
+    .catch((err) => {
+      res.status(500).json({ errorMessage: err.message });
+    });
+});
 
 router.post("/new", (req, res) => {
   const { name, location, date, maxPlayers, format } = req.body;

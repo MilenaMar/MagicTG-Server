@@ -17,7 +17,6 @@ router.get("/:id", (req, res) => {
   console.log(req.params.id);
   Player.findOne({ username: req.params.id })
     .then((user) => {
-      console.log(user);
       return res.json({ user });
     })
     .catch((err) => {
@@ -28,7 +27,7 @@ router.get("/:id", (req, res) => {
 
 //
 
-router.put("/:id/edit-profile", (req, res) => {
+router.put("/:id/edit-profile",isLoggedIn, (req, res) => {
   Player.findOneAndUpdate(req.params.id, req.body, { new: true })
     .then((userUpdated) => {
       res.json({ message: "all good", userUpdated });

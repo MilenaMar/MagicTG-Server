@@ -10,21 +10,18 @@ const saltRounds = 10;
 // Require the player model in order to interact with the database
 const Player = require("../models/Player.model");
 const Session = require("../models/Session.model");
+const Organizer = require("../models/Organizer.model");
 
 // Require necessary middlewares in order to control access to specific routes
 const shouldNotBeLoggedIn = require("../middlewares/shouldNotBeLoggedIn");
 const isLoggedIn = require("../middlewares/isLoggedIn");
 
 router.get("/session", (req, res) => {
-  // we dont want to throw an error, and just maintain the user as null
-
   if (!req.headers.authorization) {
     return res.json(null);
   }
 
-  // accessToken is being sent on every request in the headers
   const accessToken = req.headers.authorization;
-
   if (req.headers.usertype === "Organizer") {
     Session.findById(accessToken)
       .populate("organizer")
@@ -66,18 +63,6 @@ router.post("/signup/player", shouldNotBeLoggedIn, (req, res) => {
       errorMessage: "Your password needs to be at least 8 characters long.",
     });
   }
-
-  //   ! This use case is using a regular expression to control for special characters and min length
-  /*
-  const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
-
-  if (!regex.test(password)) {
-    return res.status(400).json( {
-      errorMessage:
-        "Password needs to have at least 8 chars and must contain at least one number, one lowercase and one uppercase letter.",
-    });
-  }
-  */
 
   // Search the database for a user with the username submitted in the form
   Player.findOne({ username }).then((found) => {
@@ -130,8 +115,8 @@ router.post("/login/player", shouldNotBeLoggedIn, (req, res, next) => {
       .json({ errorMessage: "Please provide your username." });
   }
 
-  // Here we use the same logic as above
-  // - either length based parameters or we check the strength of a password
+
+  // -  check the strength of a password
   if (password.length < 8) {
     return res.status(400).json({
       errorMessage: "Your password needs to be at least 8 characters long.",
@@ -159,18 +144,11 @@ router.post("/login/player", shouldNotBeLoggedIn, (req, res, next) => {
       });
     })
 
-    .catch((err) => {
-      // in this case we are sending the error handling to the error handling middleware that is defined in the error handling file
-      // you can just as easily run the res.status that is commented out below
-      next(err);
-      // return res.status(500).render("login", { errorMessage: err.message });
-    });
+    .catch((err) => { res.status(500).render("login", { errorMessage: err.message });
+  });
 });
 
 // ORGANIZER SIGNUP AND LOGIN
-
-const Organizer = require("../models/Organizer.model");
-
 router.post("/signup/organizer", shouldNotBeLoggedIn, (req, res) => {
   const { username, password, email } = req.body;
 
@@ -185,19 +163,6 @@ router.post("/signup/organizer", shouldNotBeLoggedIn, (req, res) => {
       errorMessage: "Your password needs to be at least 8 characters long.",
     });
   }
-
-  //   ! This use case is using a regular expression to control for special characters and min length
-  /*
-  const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
-
-  if (!regex.test(password)) {
-    return res.status(400).json( {
-      errorMessage:
-        "Password needs to have at least 8 chars and must contain at least one number, one lowercase and one uppercase letter.",
-    });
-  }
-  */
-
   // Search the database for a user with the username submitted in the form
   Organizer.findOne({ username }).then((found) => {
     // If the user is found, send the message username is taken
@@ -249,8 +214,7 @@ router.post("/login/organizer", shouldNotBeLoggedIn, (req, res, next) => {
       .json({ errorMessage: "Please provide your username." });
   }
 
-  // Here we use the same logic as above
-  // - either length based parameters or we check the strength of a password
+  // - check the strength of a password
   if (password.length < 8) {
     return res.status(400).json({
       errorMessage: "Your password needs to be at least 8 characters long.",
@@ -278,11 +242,7 @@ router.post("/login/organizer", shouldNotBeLoggedIn, (req, res, next) => {
       });
     })
 
-    .catch((err) => {
-      // in this case we are sending the error handling to the error handling middleware that is defined in the error handling file
-      // you can just as easily run the res.status that is commented out below
-      next(err);
-      // return res.status(500).render("login", { errorMessage: err.message });
+    .catch((err) => {res.status(500).render("login", { errorMessage: err.message });
     });
 });
 

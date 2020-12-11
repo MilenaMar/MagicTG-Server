@@ -22,7 +22,7 @@ const eventSchema = new Schema(
 
     maxPlayers: Number,
 
-    format: { type: String, enum: ["Legacy", "Modern", "Pioner", "Standar"] },
+    format: { type: String, enum: ["Legacy", "Modern", "Pioner", "Standard"] },
 
     organizer: [{ type: Schema.Types.ObjectId, ref: "Organizer" }],
 
