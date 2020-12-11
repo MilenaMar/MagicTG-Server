@@ -15,6 +15,7 @@ const Organizer = require("../models/Organizer.model");
 // Require necessary middlewares in order to control access to specific routes
 const shouldNotBeLoggedIn = require("../middlewares/shouldNotBeLoggedIn");
 const isLoggedIn = require("../middlewares/isLoggedIn");
+const { default: SingleEvent } = require("../../client/src/pages/Event/SingleEvent");
 
 // router.get("/session", (req, res) => {}
 router.get("/", (req, res, next) => {
@@ -33,8 +34,8 @@ router.get("/:id", (req, res) => {
   Event.findById(req.params.id)
   .populate("organizer")
   .populate("player")
-  .then((singleQuestion) => {
-    res.json(singleQuestion);
+  .then((singleEvent) => {
+    res.json(singleEvent);
   });
 });
 
