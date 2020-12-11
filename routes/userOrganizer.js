@@ -25,4 +25,17 @@ router.get("/:id", (req, res) => {
     });
 });
 
+router.put("/:username/edit-profile", isLoggedIn, (req, res) => {
+  Organizer.findOneAndUpdate({ username: req.params.username }, req.body, {
+    new: true,
+  })
+    .then((userUpdated) => {
+      res.json({ message: "all good", userUpdated });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ errorMessage: err.message });
+    });
+});
+
 module.exports = router;
