@@ -15,7 +15,7 @@ const Organizer = require("../models/Organizer.model");
 // Require necessary middlewares in order to control access to specific routes
 const shouldNotBeLoggedIn = require("../middlewares/shouldNotBeLoggedIn");
 const isLoggedIn = require("../middlewares/isLoggedIn");
-const { default: SingleEvent } = require("../../client/src/pages/Event/SingleEvent");
+
 
 // router.get("/session", (req, res) => {}
 router.get("/", (req, res, next) => {
@@ -72,4 +72,22 @@ router.put("/edit/:_id", isLoggedIn, (req, res) => {
     });
 });
 
+
+router.post("/:id/attend", (req, res) => {
+  Session.findOne({ _id: req.headers.authorization })
+    .populate("organizer")
+    .then((session) => {
+      return Event.create({
+        name,
+        location,
+        date,
+        maxPlayers,
+        format,
+        organizer: session.organizer,
+      });
+    })
+    .then((event) => {
+      return res.json({ event });
+    });
+});
 module.exports = router;
