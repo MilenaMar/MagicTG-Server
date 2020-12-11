@@ -16,13 +16,13 @@ const Organizer = require("../models/Organizer.model");
 const shouldNotBeLoggedIn = require("../middlewares/shouldNotBeLoggedIn");
 const isLoggedIn = require("../middlewares/isLoggedIn");
 
-
 // router.get("/session", (req, res) => {}
 router.get("/", (req, res, next) => {
-  Event.find().populate("organizer")
+  Event.find()
+    .populate("organizer")
     .populate("players")
     .then((events) => {
-      console.log(events.organizer)
+      console.log(events.organizer);
       res.json(events);
     })
     .catch((err) => {
@@ -32,13 +32,12 @@ router.get("/", (req, res, next) => {
 
 router.get("/:id", (req, res) => {
   Event.findById(req.params.id)
-  .populate("organizer")
-  .populate("player")
-  .then((singleEvent) => {
-    res.json(singleEvent);
-  });
+    .populate("organizer")
+    .populate("player")
+    .then((singleEvent) => {
+      res.json(singleEvent);
+    });
 });
-
 
 router.post("/new", (req, res) => {
   const { name, location, date, maxPlayers, format } = req.body;
@@ -60,7 +59,7 @@ router.post("/new", (req, res) => {
 });
 
 router.put("/edit/:_id", isLoggedIn, (req, res) => {
-  Event.findOneAndUpdate({ _id: req.params._id }, req.body, {
+  Event.findOneAndUpdate(req.params._id, req.body, {
     new: true,
   })
     .then((eventUpdated) => {
@@ -71,7 +70,6 @@ router.put("/edit/:_id", isLoggedIn, (req, res) => {
       res.status(500).json({ errorMessage: err.message });
     });
 });
-
 
 router.post("/:id/attend", (req, res) => {
   Session.findOne({ _id: req.headers.authorization })
@@ -90,4 +88,12 @@ router.post("/:id/attend", (req, res) => {
       return res.json({ event });
     });
 });
+
+router.delete("/delete/:id", (req, resp) => {
+  console.log(req.params.id);
+  Event.deleteOne({ _id: req.params.id }).then((deletedEvent) => {
+    resp.json("deleted event");
+  });
+});
+
 module.exports = router;
