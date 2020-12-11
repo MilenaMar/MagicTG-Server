@@ -18,16 +18,26 @@ const isLoggedIn = require("../middlewares/isLoggedIn");
 
 // router.get("/session", (req, res) => {}
 router.get("/", (req, res, next) => {
-  Event.find()
-    .populate("organizer")
+  Event.find().populate("organizer")
     .populate("players")
     .then((events) => {
+      console.log(events.organizer)
       res.json(events);
     })
     .catch((err) => {
       res.status(500).json({ errorMessage: err.message });
     });
 });
+
+router.get("/:id", (req, res) => {
+  Event.findById(req.params.id)
+  .populate("organizer")
+  .populate("player")
+  .then((singleQuestion) => {
+    res.json(singleQuestion);
+  });
+});
+
 
 router.post("/new", (req, res) => {
   const { name, location, date, maxPlayers, format } = req.body;
