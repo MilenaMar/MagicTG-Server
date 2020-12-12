@@ -39,7 +39,6 @@ router.put("/:username/edit-profile", isLoggedIn, (req, res) => {
 });
 
 router.get("/:username/events", (req, resp) => {
-  console.log("HELLO");
   Organizer.findOne({ username: req.params.username }).then((organizer) => {
     Events.find({ organizer: organizer }).then((events) => {
       return resp.json(events);

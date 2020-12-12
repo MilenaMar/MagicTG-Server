@@ -1,8 +1,5 @@
 const router = require("express").Router();
 
-// ℹ️ Handles password encryption
-const mongoose = require("mongoose");
-
 // How many rounds should bcrypt run the salt (default [10 - 12 rounds])
 const saltRounds = 10;
 
@@ -10,10 +7,8 @@ const saltRounds = 10;
 const Player = require("../models/Player.model");
 const Session = require("../models/Session.model");
 const Event = require("../models/Events.model");
-const Organizer = require("../models/Organizer.model");
 
 // Require necessary middlewares in order to control access to specific routes
-const shouldNotBeLoggedIn = require("../middlewares/shouldNotBeLoggedIn");
 const isLoggedIn = require("../middlewares/isLoggedIn");
 
 // router.get("/session", (req, res) => {}
@@ -21,8 +16,7 @@ router.get("/", (req, res, next) => {
   Event.find()
     .populate("organizer")
     .populate("players")
-    .then((events) => {
-      console.log(events.organizer);
+    .then((events) => {;
       res.json(events);
     })
     .catch((err) => {
@@ -66,23 +60,26 @@ router.put("/edit/:_id", isLoggedIn, (req, res) => {
       res.json({ message: "all good", eventUpdated });
     })
     .catch((err) => {
-      console.log(err);
       res.status(500).json({ errorMessage: err.message });
     });
 });
 
 router.post("/:id/attend", (req, res) => {
   Session.findOne({ _id: req.headers.authorization })
-    .populate("organizer")
+    .populate("player")
     .then((session) => {
-      return Event.create({
-        name,
-        location,
-        date,
-        maxPlayers,
-        format,
-        organizer: session.organizer,
-      });
+      return Event.findByIdAndUpdate( req.params.id, { $addToSet: { players: session.player}}, {new:true});
+    })
+    .then((event) => {
+      return res.json({ event });
+    });
+});
+
+router.post("/:id/unattend", (req, res) => {
+  Session.findOne({ _id: req.headers.authorization })
+    .populate("player")
+    .then((session) => {
+      return Event.findByIdAndUpdate( req.params.id, { $pull: { players: session.player}}, {new:true});
     })
     .then((event) => {
       return res.json({ event });
@@ -90,9 +87,16 @@ router.post("/:id/attend", (req, res) => {
 });
 
 router.delete("/delete/:id", (req, resp) => {
-  console.log(req.params.id);
   Event.deleteOne({ _id: req.params.id }).then((deletedEvent) => {
     resp.json("deleted event");
+  });
+});
+
+router.get("/:username/events", (req, resp) => {
+  Player.findOne({ username: req.params.username }).then((player) => {
+    Event.find({ players: player }).then((events) => {
+      return resp.json(events);
+    });
   });
 });
 
