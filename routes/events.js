@@ -7,6 +7,7 @@ const saltRounds = 10;
 const Player = require("../models/Player.model");
 const Session = require("../models/Session.model");
 const Event = require("../models/Events.model");
+const Post = require("../models/Post.model");
 
 // Require necessary middlewares in order to control access to specific routes
 const isLoggedIn = require("../middlewares/isLoggedIn");
@@ -99,5 +100,19 @@ router.get("/:username/events", (req, resp) => {
     });
   });
 });
+
+
+/////// Section for comments ///////
+
+//router.post("/addcomment", (req, res) => {
+//  Session.findOne({ _id: req.headers.authorization })
+//    .populate("player")
+//    .then((session) => {
+//      return Event.findByIdAndUpdate( req.params.id, { $pull: { players: session.player}}, {new:true});
+//    })
+//    .then((event) => {
+//      return res.json({ event });
+//    });
+//});
 
 module.exports = router;
