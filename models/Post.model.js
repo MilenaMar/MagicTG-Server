@@ -2,17 +2,13 @@ const { Schema, model } = require("mongoose");
 
 const postSchema = new Schema(
   {
-    author: {
+    author: {  
         type: String,
-        required: true,
-      },
-    typeAuthor: {
-        type: String,
-        required: true,
+        required:true,
       },
     body: {
         type: String,
-        required: true,
+        required:true,
       },
     event: [{ type: Schema.Types.ObjectId, ref: "Event" }],
     createdAt:{

@@ -15,4 +15,5 @@ router.use("/user/player", playerRoutes);
 router.use("/user/organizer", organizerRoutes);
 router.use("/event", eventRoutes);
 
+
 module.exports = router;

@@ -11,6 +11,7 @@ const Post = require("../models/Post.model");
 
 // Require necessary middlewares in order to control access to specific routes
 const isLoggedIn = require("../middlewares/isLoggedIn");
+const { isValidObjectId } = require("mongoose");
 
 // router.get("/session", (req, res) => {}
 router.get("/", (req, res, next) => {
@@ -25,12 +26,29 @@ router.get("/", (req, res, next) => {
     });
 });
 
+router.get("/allcomments", (req,res) => {
+    Post.find().then((events) => {
+      return res.json(events);
+    })
+  .catch((err) => console.log(err))
+});
+
+
+// Post.findOne({event:req.body.})
+//    .populate('event')
+//     .sort({'createdAt':-1})
+//  .then(comments =>{res.json(comments)})
+//     .catch(err => res.status(400).json( err));
+//);
+
 router.get("/:id", (req, res) => {
   Event.findById(req.params.id)
     .populate("organizer")
     .populate("player")
     .then((singleEvent) => {
       res.json(singleEvent);
+    }).catch((err) => {
+      res.status(500).json({ errorMessage: err.message });
     });
 });
 
@@ -73,7 +91,7 @@ router.post("/:id/attend", (req, res) => {
     })
     .then((event) => {
       return res.json({ event });
-    });
+    }).catch((err) => console.log(err))
 });
 
 router.post("/:id/unattend", (req, res) => {
@@ -84,13 +102,13 @@ router.post("/:id/unattend", (req, res) => {
     })
     .then((event) => {
       return res.json({ event });
-    });
+    }).catch((err) => console.log(err))
 });
 
 router.delete("/delete/:id", (req, resp) => {
   Event.deleteOne({ _id: req.params.id }).then((deletedEvent) => {
     resp.json("deleted event");
-  });
+  }).catch((err) => console.log(err));
 });
 
 router.get("/:username/events", (req, resp) => {
@@ -98,21 +116,24 @@ router.get("/:username/events", (req, resp) => {
     Event.find({ players: player }).then((events) => {
       return resp.json(events);
     });
-  });
+  }).catch((err) => console.log(err))
 });
 
 
 /////// Section for comments ///////
 
-//router.post("/addcomment", (req, res) => {
-//  Session.findOne({ _id: req.headers.authorization })
-//    .populate("player")
-//    .then((session) => {
-//      return Event.findByIdAndUpdate( req.params.id, { $pull: { players: session.player}}, {new:true});
-//    })
-//    .then((event) => {
-//      return res.json({ event });
-//    });
-//});
+router.post("/addcomment", (req, res) => {
+  const {comment,username,eventInfo} = req.body
+Event.findById({_id:eventInfo}).then((event)=> {
+  Post.create({ body:comment, author:username, event:event})
+  .then((post) => {
+      return res.json({ post })
+   })
+  })
+    .catch((err) => console.log(err))
+});
 
-module.exports = router;
+
+
+
+module.exports = router
