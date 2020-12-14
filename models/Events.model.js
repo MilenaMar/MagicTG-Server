@@ -26,6 +26,10 @@ const eventSchema = new Schema(
     organizer: [{ type: Schema.Types.ObjectId, ref: "Organizer" }],
 
     players: [{ type: Schema.Types.ObjectId, ref: "Player" }],
+
+    lat: String,
+
+    long: String,
   },
   {
     timestamps: true,

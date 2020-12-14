@@ -18,7 +18,7 @@ router.get("/", (req, res, next) => {
   Event.find()
     .populate("organizer")
     .populate("players")
-    .then((events) => {;
+    .then((events) => {
       res.json(events);
     })
     .catch((err) => {
@@ -53,7 +53,7 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/new", (req, res) => {
-  const { name, location, date, maxPlayers, format } = req.body;
+  const { name, location, date, maxPlayers, format, lat, long } = req.body;
   Session.findOne({ _id: req.headers.authorization })
     .populate("organizer")
     .then((session) => {
@@ -63,6 +63,8 @@ router.post("/new", (req, res) => {
         date,
         maxPlayers,
         format,
+        lat,
+        long,
         organizer: session.organizer,
       });
     })
@@ -87,7 +89,11 @@ router.post("/:id/attend", (req, res) => {
   Session.findOne({ _id: req.headers.authorization })
     .populate("player")
     .then((session) => {
-      return Event.findByIdAndUpdate( req.params.id, { $addToSet: { players: session.player}}, {new:true});
+      return Event.findByIdAndUpdate(
+        req.params.id,
+        { $addToSet: { players: session.player } },
+        { new: true }
+      );
     })
     .then((event) => {
       return res.json({ event });
@@ -98,7 +104,11 @@ router.post("/:id/unattend", (req, res) => {
   Session.findOne({ _id: req.headers.authorization })
     .populate("player")
     .then((session) => {
-      return Event.findByIdAndUpdate( req.params.id, { $pull: { players: session.player}}, {new:true});
+      return Event.findByIdAndUpdate(
+        req.params.id,
+        { $pull: { players: session.player } },
+        { new: true }
+      );
     })
     .then((event) => {
       return res.json({ event });
@@ -118,7 +128,6 @@ router.get("/:username/events", (req, resp) => {
     });
   }).catch((err) => console.log(err))
 });
-
 
 /////// Section for comments ///////
 
