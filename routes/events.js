@@ -26,25 +26,19 @@ router.get("/", (req, res, next) => {
     });
 });
 
-router.get("/allcomments", (req,res) => {
-    Post.find().then((events) => {
-      return res.json(events);
-    })
-  .catch((err) => console.log(err))
+router.get("/allcomments/:id", (req,res) => {
+  Event.find({_id:req.params.id}).then((event)=>{
+    Post.find({event:event}).then((posts) => {
+      return res.json(posts);
+     }) 
+  }).catch((err) => console.log(err))
 });
 
-
-// Post.findOne({event:req.body.})
-//    .populate('event')
-//     .sort({'createdAt':-1})
-//  .then(comments =>{res.json(comments)})
-//     .catch(err => res.status(400).json( err));
-//);
 
 router.get("/:id", (req, res) => {
   Event.findById(req.params.id)
     .populate("organizer")
-    .populate("player")
+    .populate("players")
     .then((singleEvent) => {
       res.json(singleEvent);
     }).catch((err) => {

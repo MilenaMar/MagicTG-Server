@@ -10,7 +10,7 @@ const postSchema = new Schema(
         type: String,
         required:true,
       },
-    event: [{ type: Schema.Types.ObjectId, ref: "Event" }],
+    event: { type: Schema.Types.ObjectId, ref: "Event" },
     createdAt:{
         type:Date,
         default:new Date(),
