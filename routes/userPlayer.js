@@ -22,7 +22,11 @@ router.get("/:id", (req, res) => {
 //
 
 router.put("/:id/edit-profile",isLoggedIn, (req, res) => {
-  Player.findOneAndUpdate(req.params.id, req.body, { new: true })
+  Player.findOne({ username:req.body.username}).then((found) => {
+    if (found) {
+      return res.status(400).json({ errorMessage: "Username already taken." });
+    }
+    return Player.findOneAndUpdate({username:req.params.id}, req.body, { new: true })
     .then((userUpdated) => {
       res.json({ message: "all good", userUpdated });
     })
@@ -30,6 +34,7 @@ router.put("/:id/edit-profile",isLoggedIn, (req, res) => {
       console.log(err);
       res.status(500).json({ errorMessage: err.message });
     });
+  })
 });
 
 

@@ -14,7 +14,6 @@ const Events = require("../models/Events.model");
 
 ////// Organizer Profile//////////////////////
 router.get("/:id", (req, res) => {
-  console.log(req.params.id);
   Organizer.findOne({ username: req.params.id })
     .then((user) => {
       return res.json({ user });
@@ -26,7 +25,11 @@ router.get("/:id", (req, res) => {
 });
 
 router.put("/:username/edit-profile", isLoggedIn, (req, res) => {
-  Organizer.findOneAndUpdate({ username: req.params.username }, req.body, {
+  Organizer.findOne({ username:req.body.username}).then((found) => {
+    if (found) {
+      return res.status(400).json({ errorMessage: "Username already taken." });
+    }
+  return Organizer.findOneAndUpdate({ username: req.params.username }, req.body, {
     new: true,
   })
     .then((userUpdated) => {
@@ -36,6 +39,7 @@ router.put("/:username/edit-profile", isLoggedIn, (req, res) => {
       console.log(err);
       res.status(500).json({ errorMessage: err.message });
     });
+  })
 });
 
 router.get("/:username/events", (req, resp) => {
