@@ -68,7 +68,7 @@ router.post("/new", (req, res) => {
 });
 
 router.put("/edit/:_id", isLoggedIn, (req, res) => {
-  Event.findOneAndUpdate(req.params._id, req.body, {
+  Event.findOneAndUpdate({_id:req.params._id}, req.body, {
     new: true,
   })
     .then((eventUpdated) => {
