@@ -9,6 +9,20 @@ const Session = require("../models/Session.model");
 const Event = require("../models/Events.model");
 const Post = require("../models/Post.model");
 
+
+
+selectImage = () => {
+const images = ["https://res.cloudinary.com/dwttlckdr/image/upload/v1608111266/img10_sl1llc.png", 
+  "https://res.cloudinary.com/dwttlckdr/image/upload/v1608111264/261841_syvuh0.jpg", 
+  "https://res.cloudinary.com/dwttlckdr/image/upload/v1608111263/img7_ayane9.jpg",
+"https://res.cloudinary.com/dwttlckdr/image/upload/v1608111262/img1_mx5roq.jpg",
+"https://res.cloudinary.com/dwttlckdr/image/upload/v1608111262/img3_fm3bl8.jpg",
+"https://res.cloudinary.com/dwttlckdr/image/upload/v1608111261/img2_wkznje.jpg"]
+  return images[Math.floor(Math.random() * images.length)];
+}
+
+
+
 // Require necessary middlewares in order to control access to specific routes
 const isLoggedIn = require("../middlewares/isLoggedIn");
 const { isValidObjectId } = require("mongoose");
@@ -47,7 +61,9 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/new", (req, res) => {
-  const { name, location, date, maxPlayers, format, lat, long } = req.body;
+  const { name, location, date, maxPlayers, format, lat, long, description} = req.body;
+  let image = selectImage();
+
   Session.findOne({ _id: req.headers.authorization })
     .populate("organizer")
     .then((session) => {
@@ -59,10 +75,13 @@ router.post("/new", (req, res) => {
         format,
         lat,
         long,
+        image,
+        description,
         organizer: session.organizer,
       });
     })
     .then((event) => {
+      console.log(event)
       return res.json({ event });
     });
 });
